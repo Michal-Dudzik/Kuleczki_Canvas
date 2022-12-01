@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Not Agar.io</title>
+		<link rel="stylesheet" href="style.css" />
+		<script defer src="main.js"></script>
+
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+	</head>
+	<body>
+		<span id="hideMenu" class="material-symbols-outlined"> menu </span>
+		<div id="menu">
+			<label for="defaultSize">Default Size: </label><span id="ds">0</span>
+			<input
+				id="defaultSize"
+				class="slider"
+				type="range"
+				min="1"
+				max="100"
+				value="50" />
+			<label for="smallBallSpeed">Small Ball Speed: </label
+			><span id="sbs">0</span>
+			<input
+				id="smallBallSpeed"
+				class="slider"
+				type="range"
+				min="1"
+				max="100"
+				value="50" />
+			<label for="speedMultiplier">Speed Multiplier: </label
+			><span id="sm">0</span>
+			<input
+				id="speedMultiplier"
+				class="slider"
+				type="range"
+				min="1"
+				max="100"
+				value="50" />
+			<label for="ammount">Ammount of balls: </label><span id="a">0</span>
+			<input
+				id="ammount"
+				class="slider"
+				type="range"
+				min="1"
+				max="100"
+				value="50" />
+
+			<button id="toggleColors">Toggle Colors</button>
+			<button id="start">Start</button>
+			<button id="reset">Reset</button>
+		</div>
+		<canvas></canvas>
+	</body>
+</html>
