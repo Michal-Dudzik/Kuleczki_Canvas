@@ -15,7 +15,7 @@
 	<body>
 		<span id="hideMenu" class="material-symbols-outlined"> menu </span>
 		<div id="menu">
-			<label for="defaultSize">Default Size: </label><span id="ds">0</span>
+			<label for="defaultSize">Default Size: </label><span id="ds">50</span>
 			<input
 				id="defaultSize"
 				class="slider"
@@ -24,7 +24,7 @@
 				max="100"
 				value="50" />
 			<label for="smallBallSpeed">Small Ball Speed: </label
-			><span id="sbs">0</span>
+			><span id="sbs">50</span>
 			<input
 				id="smallBallSpeed"
 				class="slider"
@@ -38,22 +38,22 @@
 				id="speedMultiplier"
 				class="slider"
 				type="range"
-				min="1"
-				max="100"
-				value="50" />
-			<label for="ammount">Ammount of balls: </label><span id="a">0</span>
+				min="0"
+				max="5"
+				value="0" />
+			<label for="ammount">Ammount of balls: </label><span id="a">50</span>
 			<input
 				id="ammount"
 				class="slider"
 				type="range"
 				min="1"
-				max="100"
+				max="1000"
 				value="50" />
 
 			<button id="toggleColors">Toggle Colors</button>
-			<button id="start">Start</button>
-			<button id="reset">Reset</button>
+			<button id="start" onclick="start()">Start</button>
+			<button id="reset" onclick="reset()">Reset</button>
 		</div>
-		<canvas></canvas>
+		<canvas id="ballPit"></canvas>
 	</body>
 </html>
