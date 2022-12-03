@@ -31,7 +31,7 @@
 				type="range"
 				min="1"
 				max="100"
-				value="50" />
+				value="10" />
 			<label for="speedMultiplier">Speed Multiplier: </label
 			><span id="sm">0</span>
 			<input
@@ -48,11 +48,10 @@
 				type="range"
 				min="1"
 				max="1000"
-				value="50" />
+				value="15" />
 
-			<button id="toggleColors">Toggle Colors</button>
-			<button id="start" onclick="start()">Start</button>
-			<button id="reset" onclick="reset()">Reset</button>
+			<button id="start" onclick="loop()">Start</button>
+			<button id="stop" onclick="stopLoop()">Stop</button>
 		</div>
 		<canvas id="ballPit"></canvas>
 	</body>
