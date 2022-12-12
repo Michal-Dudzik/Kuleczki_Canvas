@@ -1,0 +1,121 @@
+<html>
+	<head>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				var canvas = document.createElement('canvas');
+				canvas.width = window.innerWidth;
+				canvas.height = window.innerHeight;
+				document.body.appendChild(canvas);
+				var ctx = canvas.getContext('2d');
+				var balls = [];
+				var amount = prompt('How many balls?');
+				var colors = [
+					'#FF0000',
+					'#00FF00',
+					'#0000FF',
+					'#FFFF00',
+					'#00FFFF',
+					'#FF00FF',
+					'#000000',
+					'#FFFFFF',
+				];
+
+				function Ball(x, y, dx, dy, radius, color) {
+					this.x = x;
+					this.y = y;
+					this.dx = dx;
+					this.dy = dy;
+					this.radius = radius;
+					this.color = color;
+					this.draw = function () {
+						ctx.beginPath();
+						ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+						ctx.fillStyle = this.color;
+						ctx.fill();
+						ctx.closePath();
+					};
+					this.update = function () {
+						if (
+							this.x + this.radius > canvas.width ||
+							this.x - this.radius < 0
+						) {
+							this.dx = -this.dx;
+						}
+						if (
+							this.y + this.radius > canvas.height ||
+							this.y - this.radius < 0
+						) {
+							this.dy = -this.dy;
+						}
+						this.x += this.dx;
+						this.y += this.dy;
+						this.draw();
+					};
+				}
+
+				function init() {
+					for (var i = 0; i < amount; i++) {
+						var radius = Math.random() * 20 + 1;
+						var x = Math.random() * (canvas.width - radius * 2) + radius;
+						var y = Math.random() * (canvas.height - radius * 2) + radius;
+						var dx = (Math.random() - 0.5) * 2;
+						var dy = (Math.random() - 0.5) * 2;
+						var color = colors[Math.floor(Math.random() * colors.length)];
+						balls.push(new Ball(x, y, dx, dy, radius, color));
+					}
+				}
+
+				function animate() {
+					requestAnimationFrame(animate);
+					ctx.clearRect(0, 0, canvas.width, canvas.height);
+					for (var i = 0; i < balls.length; i++) {
+						balls[i].update();
+						for (var j = 0; j < balls.length; j++) {
+							if (i != j) {
+								var distance = Math.sqrt(
+									Math.pow(balls[i].x - balls[j].x, 2) +
+										Math.pow(balls[i].y - balls[j].y, 2)
+								);
+								if (distance < balls[i].radius + balls[j].radius) {
+									ctx.beginPath();
+									ctx.moveTo(balls[i].x, balls[i].y);
+									ctx.lineTo(balls[j].x, balls[j].y);
+									ctx.strokeStyle = balls[i].color;
+									ctx.stroke();
+									ctx.closePath();
+								}
+							}
+						}
+					}
+				}
+
+				init();
+				animate();
+
+				canvas.addEventListener('click', function (e) {
+					var mouse = {
+						x: e.clientX,
+						y: e.clientY,
+					};
+					for (var i = 0; i < balls.length; i++) {
+						var distance = Math.sqrt(
+							Math.pow(mouse.x - balls[i].x, 2) +
+								Math.pow(mouse.y - balls[i].y, 2)
+						);
+						if (distance < balls[i].radius) {
+							balls.splice(i, 1);
+							var radius = Math.random() * 20 + 1;
+							var x = Math.random() * (canvas.width - radius * 2) + radius;
+							var y = Math.random() * (canvas.height - radius * 2) + radius;
+							var dx = (Math.random() - 0.5) * 2;
+							var dy = (Math.random() - 0.5) * 2;
+							var color = colors[Math.floor(Math.random() * colors.length)];
+							balls.push(new Ball(x, y, dx, dy, radius, color));
+						}
+					}
+				});
+			});
+		</script>
+	</head>
+	<body style="margin: 0"></body>
+</html>

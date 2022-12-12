@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Not Agar.io</title>
 		<link rel="stylesheet" href="style.css" />
-		<script defer src="main.js"></script>
+		<script defer src="main copy.js"></script>
 
 		<link
 			rel="stylesheet"
@@ -22,7 +22,7 @@
 				type="range"
 				min="1"
 				max="100"
-				value="50" />
+				value="0" />
 			<label for="smallBallSpeed">Small Ball Speed: </label
 			><span id="sbs">50</span>
 			<input
@@ -31,7 +31,7 @@
 				type="range"
 				min="1"
 				max="100"
-				value="10" />
+				value="0" />
 			<label for="speedMultiplier">Speed Multiplier: </label
 			><span id="sm">0</span>
 			<input
@@ -48,9 +48,9 @@
 				type="range"
 				min="1"
 				max="1000"
-				value="15" />
+				value="20" />
 
-			<button id="start" onclick="loop()">Start</button>
+			<button id="start" onclick="startLoop()">Start</button>
 			<button id="stop" onclick="stopLoop()">Stop</button>
 		</div>
 		<canvas id="ballPit"></canvas>

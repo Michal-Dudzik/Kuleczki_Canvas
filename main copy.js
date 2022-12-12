@@ -1,8 +1,8 @@
 const canvas = document.getElementById('ballPit');
 const ctx = canvas.getContext('2d');
 
-const width = (canvas.width = window.innerWidth);
-const height = (canvas.height = window.innerHeight);
+const canvasWidth = (canvas.canvasWidth = window.innerWidth);
+const canvasHeight = (canvas.canvasHeight = window.innerHeight);
 
 function random(min, max) {
 	const num = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -49,11 +49,11 @@ ammount.addEventListener('input', () => {
 });
 
 class Ball {
-	constructor(x, y, velX, velY, color, size, speedMultiplier) {
+	constructor(x, y, velMin, velMax, color, size, speedMultiplier) {
 		this.x = x;
 		this.y = y;
-		this.velX = velX;
-		this.velY = velY;
+		this.velMin = velMin;
+		this.velMax = velMax;
 		this.color = color;
 		this.size = size;
 	}
@@ -66,7 +66,7 @@ class Ball {
 	}
 
 	update() {
-		if (this.x + this.size >= width) {
+		if (this.x + this.size >= canvasWidth) {
 			this.velX = -this.velX;
 		}
 
@@ -74,7 +74,7 @@ class Ball {
 			this.velX = -this.velX;
 		}
 
-		if (this.y + this.size >= height) {
+		if (this.y + this.size >= canvasHeight) {
 			this.velY = -this.velY;
 		}
 
@@ -109,7 +109,8 @@ class Ball {
 
 				if (distance < this.size + ball.size) {
 					ctx.beginPath();
-					ctx.strokeStyle = this.color;
+					ctx.strokeStyle = '#333';
+					ctx.lineWidth = 5;
 					ctx.moveTo(this.x, this.y);
 					ctx.lineTo(ball.x, ball.y);
 					ctx.stroke();
@@ -122,12 +123,10 @@ class Ball {
 const balls = [];
 
 while (balls.length < ammount.value) {
-	const coordinates = random(10, 20);
+	const coordinates = random(1, 20);
 	const ball = new Ball(
-		// ball position always drawn at least one ball width
-		// away from the edge of the canvas, to avoid drawing errors
-		random(0 + coordinates, width - coordinates),
-		random(0 + coordinates, height - coordinates),
+		random(0 + coordinates, canvasWidth - coordinates),
+		random(0 + coordinates, canvasHeight - coordinates),
 		random(-7, 7),
 		random(-7, 7),
 		randomRGB(),
@@ -139,7 +138,7 @@ while (balls.length < ammount.value) {
 
 function loop() {
 	ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
-	ctx.fillRect(0, 0, width, height);
+	ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
 	for (const ball of balls) {
 		ball.draw();
@@ -154,7 +153,7 @@ function loop() {
 
 function startLoop() {
 	// balls = [];
-	// ctx.clearRect(0, 0, width, height);
+	// ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
 	loop();
 }

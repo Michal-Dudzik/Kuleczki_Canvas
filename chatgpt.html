@@ -1,0 +1,122 @@
+<html>
+	<head>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				var canvas = document.createElement('canvas');
+				canvas.width = window.innerWidth;
+				canvas.height = window.innerHeight;
+				document.body.appendChild(canvas);
+				var ctx = canvas.getContext('2d');
+
+				var balls = [];
+				var lines = [];
+
+				var ballCount = prompt('How many balls do you want?');
+
+				function Ball(x, y, dx, dy, radius, color) {
+					this.x = x;
+					this.y = y;
+					this.dx = dx;
+					this.dy = dy;
+					this.radius = radius;
+					this.color = color;
+				}
+
+				function Line(x1, y1, x2, y2, color) {
+					this.x1 = x1;
+					this.y1 = y1;
+					this.x2 = x2;
+					this.y2 = y2;
+					this.color = color;
+				}
+
+				function drawBall(ball) {
+					ctx.beginPath();
+					ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+					ctx.fillStyle = ball.color;
+					ctx.fill();
+					ctx.closePath();
+				}
+
+				function drawLine(line) {
+					ctx.beginPath();
+					ctx.moveTo(line.x1, line.y1);
+					ctx.lineTo(line.x2, line.y2);
+					ctx.strokeStyle = line.color;
+					ctx.lineWidth = 5;
+					ctx.stroke();
+					ctx.closePath();
+				}
+
+				function draw() {
+					ctx.clearRect(0, 0, canvas.width, canvas.height);
+					for (var i = 0; i < balls.length; i++) {
+						drawBall(balls[i]);
+						balls[i].x += balls[i].dx;
+						balls[i].y += balls[i].dy;
+						if (
+							balls[i].x + balls[i].radius > canvas.width ||
+							balls[i].x - balls[i].radius < 0
+						) {
+							balls[i].dx = -balls[i].dx;
+						}
+						if (
+							balls[i].y + balls[i].radius > canvas.height ||
+							balls[i].y - balls[i].radius < 0
+						) {
+							balls[i].dy = -balls[i].dy;
+						}
+					}
+					for (var i = 0; i < lines.length; i++) {
+						drawLine(lines[i]);
+					}
+					requestAnimationFrame(draw);
+				}
+
+				function randomColor() {
+					var r = Math.floor(Math.random() * 256);
+					var g = Math.floor(Math.random() * 256);
+					var b = Math.floor(Math.random() * 256);
+					return 'rgb(' + r + ', ' + g + ', ' + b + ')';
+				}
+
+				function randomSpeed() {
+					var speed = Math.floor(Math.random() * 10) + 1;
+					if (Math.random() < 0.5) {
+						speed = -speed;
+					}
+					return speed;
+				}
+
+				function randomRadius() {
+					var radius = Math.floor(Math.random() * 50) + 10;
+					return radius;
+				}
+
+				function randomPosition() {
+					var position = Math.floor(Math.random() * (canvas.width - 100)) + 50;
+					return position;
+				}
+
+				function distance(x1, y1, x2, y2) {
+					var xDistance = x2 - x1;
+					var yDistance = y2 - y1;
+					return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+				}
+
+				function createBalls() {
+					for (var i = 0; i < ballCount; i++) {
+						var x = randomPosition();
+						var y = randomPosition();
+						var dx = randomSpeed();
+						var dy = randomSpeed();
+						var radius = randomRadius();
+						var color = randomColor();
+						balls.push(new Ball(x, y, dx, dy, radius, color));
+					}
+				}
+			});
+		</script>
+	</head>
+	<body></body>
+</html>
