@@ -5,7 +5,7 @@ const width = (canvas.width = window.innerWidth);
 const height = (canvas.height = window.innerHeight);
 
 function random(min, max) {
-	const num = Math.floor(Math.random() * (max - min + 1)) + min;
+	const num = Math.floor(Math.random() * (max - min)) + min;
 	return num;
 }
 
@@ -91,16 +91,15 @@ Ball.prototype.update = function () {
 };
 
 function createBalls(num, maxSize, minSize, maxSpeed, minSpeed) {
-	for (var i = 0; i < num; i++) {
-		var radius = Math.random() * 25 + 5;
-		// var radius = Math.random() * (maxSize - minSize) + minSize;
-		var x = Math.random() * (canvas.width - radius * 2) + radius;
-		var y = Math.random() * (canvas.height - radius * 2) + radius;
-		var vx = Math.random() * 6 - 3;
-		var vy = Math.random() * 6 - 3;
-		// var vx = Math.random() * (maxSpeed - minSpeed) + minSpeed;
-		// var vy = Math.random() * (maxSpeed - minSpeed) + minSpeed;
-		var color = randomRGB();
+	for (let i = 0; i < num; i++) {
+		const radius = +random(minSize, maxSize);
+		const x = Math.random() * (canvas.width - radius * 2) + radius;
+		const y = Math.random() * (canvas.height - radius * 2) + radius;
+		// const vx = Math.random() * 6 - 3;
+		// const vy = Math.random() * 6 - 3;
+		const vx = +random(minSpeed, maxSpeed);
+		const vy = +random(minSpeed, maxSpeed);
+		const color = randomRGB();
 		balls.push(new Ball(x, y, vx, vy, radius, color));
 	}
 }
@@ -114,6 +113,7 @@ function drawBalls() {
 function updateBalls() {
 	for (var i = 0; i < balls.length; i++) {
 		balls[i].update();
+		console.log(balls[i].radius);
 	}
 }
 
