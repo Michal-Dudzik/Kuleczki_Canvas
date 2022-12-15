@@ -93,16 +93,46 @@ Ball.prototype.update = function () {
 function createBalls(num, maxSize, minSize, maxSpeed, minSpeed) {
 	for (let i = 0; i < num; i++) {
 		const radius = +random(minSize, maxSize);
-		const x = Math.random() * (canvas.width - radius * 2) + radius;
-		const y = Math.random() * (canvas.height - radius * 2) + radius;
-		// const vx = Math.random() * 6 - 3;
-		// const vy = Math.random() * 6 - 3;
+		const x = Math.random() * (canvas.width - radius * Math.PI) + radius;
+		const y = Math.random() * (canvas.height - radius * Math.PI) + radius;
 		const vx = +random(minSpeed, maxSpeed);
 		const vy = +random(minSpeed, maxSpeed);
 		const color = randomRGB();
 		balls.push(new Ball(x, y, vx, vy, radius, color));
 	}
 }
+
+canvas.addEventListener('click', function (e) {
+	for (let i = 0; i < balls.length; i++) {
+		if (
+			e.clientX > balls[i].x - balls[i].radius &&
+			e.clientX < balls[i].x + balls[i].radius &&
+			e.clientY > balls[i].y - balls[i].radius &&
+			e.clientY < balls[i].y + balls[i].radius
+		) {
+			balls.splice(i, 1);
+			createBalls(
+				2,
+				maxSize.value,
+				minSize.value,
+				maxSpeed.value,
+				minSpeed.value
+			);
+		}
+	}
+});
+
+canvas.addEventListener('mousemove', function (e) {
+	for (let i = 0; i < balls.length; i++) {
+		if (balls[i].x >= e.clientX) {
+			balls[i].x -= 2;
+		}
+
+		if (balls[i].y >= e.clientY) {
+			balls[i].y -= 2;
+		}
+	}
+});
 
 function drawBalls() {
 	for (var i = 0; i < balls.length; i++) {
@@ -113,7 +143,6 @@ function drawBalls() {
 function updateBalls() {
 	for (var i = 0; i < balls.length; i++) {
 		balls[i].update();
-		console.log(balls[i].radius);
 	}
 }
 
