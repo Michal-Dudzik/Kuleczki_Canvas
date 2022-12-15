@@ -15,33 +15,39 @@
 	<body>
 		<span id="hideMenu" class="material-symbols-outlined"> menu </span>
 		<div id="menu">
-			<label for="defaultSize">Default Size: </label><span id="ds">50</span>
+			<label for="minSize">Min Size: </label><span id="minSi">5</span>
 			<input
-				id="defaultSize"
+				id="minSize"
+				class="slider"
+				type="range"
+				min="5"
+				max="25"
+				value="5" />
+			<label for="maxSize">Max Size: </label><span id="maxSi">25</span>
+			<input
+				id="maxSize"
+				class="slider"
+				type="range"
+				min="25"
+				max="50"
+				value="25" />
+			<label for="minSpeed">Min Speed: </label><span id="minS">1</span>
+			<input
+				id="minSpeed"
 				class="slider"
 				type="range"
 				min="1"
-				max="100"
-				value="0" />
-			<label for="smallBallSpeed">Small Ball Speed: </label
-			><span id="sbs">50</span>
+				max="20"
+				value="1" />
+			<label for="maxSpeed">Max Speed: </label><span id="maxS">20</span>
 			<input
-				id="smallBallSpeed"
+				id="maxSpeed"
 				class="slider"
 				type="range"
-				min="1"
+				min="20"
 				max="100"
-				value="0" />
-			<label for="speedMultiplier">Speed Multiplier: </label
-			><span id="sm">0</span>
-			<input
-				id="speedMultiplier"
-				class="slider"
-				type="range"
-				min="0"
-				max="5"
-				value="0" />
-			<label for="ammount">Ammount of balls: </label><span id="a">50</span>
+				value="20" />
+			<label for="ammount">Ammount of balls: </label><span id="a">20</span>
 			<input
 				id="ammount"
 				class="slider"
@@ -51,7 +57,7 @@
 				value="20" />
 
 			<button id="start" onclick="startLoop()">Start</button>
-			<button id="stop" onclick="stopLoop()">Stop</button>
+			<button id="reset" onclick="resetLoop()">Reset</button>
 		</div>
 		<canvas id="ballPit"></canvas>
 	</body>

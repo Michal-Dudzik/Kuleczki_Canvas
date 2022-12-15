@@ -13,35 +13,33 @@ function randomRGB() {
 	return `rgb(${random(0, 255)},${random(0, 255)},${random(0, 255)})`;
 }
 
-// check for updates to the variables
-
-const defaultSize = document.getElementById('defaultSize');
-const smallBallSpeed = document.getElementById('smallBallSpeed');
-const speedMultiplier = document.getElementById('speedMultiplier');
+const defaultRadius = document.getElementById('defaultRadius');
+const minSpeed = document.getElementById('minSpeed');
+const maxSpeed = document.getElementById('maxSpeed');
 const ammount = document.getElementById('ammount');
 
 const menu = document.getElementById('menu');
 const hideButton = document.getElementById('hideMenu');
 
-const ds = document.getElementById('ds');
-const sbs = document.getElementById('sbs');
-const sm = document.getElementById('sm');
+const dr = document.getElementById('dr');
+const minS = document.getElementById('minS');
+const maxS = document.getElementById('maxS');
 const a = document.getElementById('a');
 
 hideButton.addEventListener('click', () => {
 	menu.classList.toggle('hide');
 });
 
-defaultSize.addEventListener('input', () => {
-	ds.innerHTML = defaultSize.value;
+defaultRadius.addEventListener('input', () => {
+	dr.innerHTML = defaultRadius.value;
 });
 
-smallBallSpeed.addEventListener('input', () => {
-	sbs.innerHTML = smallBallSpeed.value;
+minSpeed.addEventListener('input', () => {
+	minS.innerHTML = minSpeed.value;
 });
 
-speedMultiplier.addEventListener('input', () => {
-	sm.innerHTML = speedMultiplier.value;
+maxSpeed.addEventListener('input', () => {
+	maxS.innerHTML = maxSpeed.value;
 });
 
 ammount.addEventListener('input', () => {
@@ -49,39 +47,37 @@ ammount.addEventListener('input', () => {
 });
 
 class Ball {
-	constructor(x, y, velX, velY, color, size, speedMultiplier) {
+	constructor(x, y, velMin, velMax, color, radius) {
 		this.x = x;
 		this.y = y;
-		this.velX = velX;
-		this.velY = velY;
+		this.velMin = velMin;
+		this.velMax = velMax;
 		this.color = color;
-		this.size = size;
+		this.radius = radius;
+		this.velX = Math.random() * (velMax - velMin) + velMin;
+		this.velY = Math.random() * (velMax - velMin) + velMin;
 	}
 
 	draw() {
 		ctx.beginPath();
 		ctx.fillStyle = this.color;
-		ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
+		ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
 		ctx.fill();
 	}
 
 	update() {
-		if (this.x + this.size >= width) {
-			this.velX = -this.velX;
+		if (this.x + this.radius >= width) {
+			this.velX = -(Math.random() * (this.velMax - this.velMin) + this.velMin);
 		}
-
-		if (this.x - this.size <= 0) {
-			this.velX = -this.velX;
+		if (this.x - this.radius <= 0) {
+			this.velX = Math.random() * (this.velMax - this.velMin) + this.velMin;
 		}
-
-		if (this.y + this.size >= height) {
-			this.velY = -this.velY;
+		if (this.y + this.radius >= height) {
+			this.velY = -(Math.random() * (this.velMax - this.velMin) + this.velMin);
 		}
-
-		if (this.y - this.size <= 0) {
-			this.velY = -this.velY;
+		if (this.y - this.radius <= 0) {
+			this.velY = Math.random() * (this.velMax - this.velMin) + this.velMin;
 		}
-
 		this.x += this.velX;
 		this.y += this.velY;
 	}
@@ -93,28 +89,23 @@ class Ball {
 				const dy = this.y - ball.y;
 				const distance = Math.sqrt(dx * dx + dy * dy);
 
-				if (distance < this.size + ball.size) {
+				if (distance < this.radius + ball.radius) {
 					ball.color = this.color = randomRGB();
 				}
 			}
 		}
 	}
 
-	proximityDetect() {
-		for (const ball of balls) {
-			if (this !== ball) {
-				const dx = this.x - ball.x;
-				const dy = this.y - ball.y;
-				const distance = Math.sqrt(dx * dx + dy * dy);
-
-				if (distance < this.size + ball.size) {
-					ctx.beginPath();
-					ctx.strokeStyle = this.color;
-					ctx.moveTo(this.x, this.y);
-					ctx.lineTo(ball.x, ball.y);
-					ctx.stroke();
-				}
-			}
+	proximityDetection(otherBall, ctx) {
+		let dx = this.x - otherBall.x;
+		let dy = this.y - otherBall.y;
+		let distance = Math.sqrt(dx * dx + dy * dy);
+		if (distance < this.radius + otherBall.radius) {
+			ctx.beginPath();
+			ctx.strokeStyle = 'white';
+			ctx.moveTo(this.x, this.y);
+			ctx.lineTo(otherBall.x, otherBall.y);
+			ctx.stroke();
 		}
 	}
 }
@@ -145,7 +136,7 @@ function loop() {
 		ball.draw();
 		ball.update();
 		ball.collisionDetect();
-		// ball.proximityDetect();
+		// ball.proximityDetection();
 		// ball.cursorDetect();
 	}
 

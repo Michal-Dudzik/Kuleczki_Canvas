@@ -1,8 +1,8 @@
 const canvas = document.getElementById('ballPit');
 const ctx = canvas.getContext('2d');
 
-const canvasWidth = (canvas.canvasWidth = window.innerWidth);
-const canvasHeight = (canvas.canvasHeight = window.innerHeight);
+const width = (canvas.width = window.innerWidth);
+const height = (canvas.height = window.innerHeight);
 
 function random(min, max) {
 	const num = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -13,151 +13,156 @@ function randomRGB() {
 	return `rgb(${random(0, 255)},${random(0, 255)},${random(0, 255)})`;
 }
 
-// check for updates to the variables
-
-const defaultSize = document.getElementById('defaultSize');
-const smallBallSpeed = document.getElementById('smallBallSpeed');
-const speedMultiplier = document.getElementById('speedMultiplier');
+const minSize = document.getElementById('minSize');
+const maxSize = document.getElementById('maxSize');
+const minSpeed = document.getElementById('minSpeed');
+const maxSpeed = document.getElementById('maxSpeed');
 const ammount = document.getElementById('ammount');
 
 const menu = document.getElementById('menu');
 const hideButton = document.getElementById('hideMenu');
 
-const ds = document.getElementById('ds');
-const sbs = document.getElementById('sbs');
-const sm = document.getElementById('sm');
+const minSi = document.getElementById('minSi');
+const maxSi = document.getElementById('maxSi');
+const minS = document.getElementById('minS');
+const maxS = document.getElementById('maxS');
 const a = document.getElementById('a');
 
 hideButton.addEventListener('click', () => {
 	menu.classList.toggle('hide');
 });
 
-defaultSize.addEventListener('input', () => {
-	ds.innerHTML = defaultSize.value;
+minSize.addEventListener('input', () => {
+	minSi.innerHTML = minSize.value;
 });
 
-smallBallSpeed.addEventListener('input', () => {
-	sbs.innerHTML = smallBallSpeed.value;
+maxSize.addEventListener('input', () => {
+	maxSi.innerHTML = maxSize.value;
 });
 
-speedMultiplier.addEventListener('input', () => {
-	sm.innerHTML = speedMultiplier.value;
+minSpeed.addEventListener('input', () => {
+	minS.innerHTML = minSpeed.value;
+});
+
+maxSpeed.addEventListener('input', () => {
+	maxS.innerHTML = maxSpeed.value;
 });
 
 ammount.addEventListener('input', () => {
 	a.innerHTML = ammount.value;
 });
 
-class Ball {
-	constructor(x, y, velMin, velMax, color, size, speedMultiplier) {
-		this.x = x;
-		this.y = y;
-		this.velMin = velMin;
-		this.velMax = velMax;
-		this.color = color;
-		this.size = size;
+function Ball(x, y, vx, vy, radius, color) {
+	this.x = x;
+	this.y = y;
+	this.vx = vx;
+	this.vy = vy;
+	this.radius = radius;
+	this.color = color;
+}
+
+Ball.prototype.draw = function () {
+	ctx.beginPath();
+	ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+	ctx.closePath();
+	ctx.fillStyle = this.color;
+	ctx.fill();
+};
+
+Ball.prototype.update = function () {
+	if (this.x + this.radius >= canvas.width) {
+		this.vx = -this.vx;
 	}
 
-	draw() {
-		ctx.beginPath();
-		ctx.fillStyle = this.color;
-		ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
-		ctx.fill();
+	if (this.x - this.radius <= 0) {
+		this.vx = -this.vx;
 	}
 
-	update() {
-		if (this.x + this.size >= canvasWidth) {
-			this.velX = -this.velX;
-		}
-
-		if (this.x - this.size <= 0) {
-			this.velX = -this.velX;
-		}
-
-		if (this.y + this.size >= canvasHeight) {
-			this.velY = -this.velY;
-		}
-
-		if (this.y - this.size <= 0) {
-			this.velY = -this.velY;
-		}
-
-		this.x += this.velX;
-		this.y += this.velY;
+	if (this.y + this.radius >= canvas.height) {
+		this.vy = -this.vy;
 	}
 
-	collisionDetect() {
-		for (const ball of balls) {
-			if (this !== ball) {
-				const dx = this.x - ball.x;
-				const dy = this.y - ball.y;
-				const distance = Math.sqrt(dx * dx + dy * dy);
-
-				if (distance < this.size + ball.size) {
-					ball.color = this.color = randomRGB();
-				}
-			}
-		}
+	if (this.y - this.radius <= 0) {
+		this.vy = -this.vy;
 	}
 
-	proximityDetect() {
-		for (const ball of balls) {
-			if (this !== ball) {
-				const dx = this.x - ball.x;
-				const dy = this.y - ball.y;
-				const distance = Math.sqrt(dx * dx + dy * dy);
+	this.x += this.vx;
+	this.y += this.vy;
+};
 
-				if (distance < this.size + ball.size) {
-					ctx.beginPath();
-					ctx.strokeStyle = '#333';
-					ctx.lineWidth = 5;
-					ctx.moveTo(this.x, this.y);
-					ctx.lineTo(ball.x, ball.y);
-					ctx.stroke();
-				}
-			}
-		}
+function createBalls(num, maxSize, minSize, maxSpeed, minSpeed) {
+	for (var i = 0; i < num; i++) {
+		var radius = Math.random() * 25 + 5;
+		// var radius = Math.random() * (maxSize - minSize) + minSize;
+		var x = Math.random() * (canvas.width - radius * 2) + radius;
+		var y = Math.random() * (canvas.height - radius * 2) + radius;
+		var vx = Math.random() * 6 - 3;
+		var vy = Math.random() * 6 - 3;
+		// var vx = Math.random() * (maxSpeed - minSpeed) + minSpeed;
+		// var vy = Math.random() * (maxSpeed - minSpeed) + minSpeed;
+		var color = randomRGB();
+		balls.push(new Ball(x, y, vx, vy, radius, color));
 	}
 }
 
-const balls = [];
+function drawBalls() {
+	for (var i = 0; i < balls.length; i++) {
+		balls[i].draw();
+	}
+}
 
-while (balls.length < ammount.value) {
-	const coordinates = random(1, 20);
-	const ball = new Ball(
-		random(0 + coordinates, canvasWidth - coordinates),
-		random(0 + coordinates, canvasHeight - coordinates),
-		random(-7, 7),
-		random(-7, 7),
-		randomRGB(),
-		coordinates
-	);
+function updateBalls() {
+	for (var i = 0; i < balls.length; i++) {
+		balls[i].update();
+	}
+}
 
-	balls.push(ball);
+function drawLines() {
+	for (var i = 0; i < balls.length; i++) {
+		for (var j = i + 1; j < balls.length; j++) {
+			var dx = balls[j].x - balls[i].x;
+			var dy = balls[j].y - balls[i].y;
+			var dist = Math.sqrt(dx * dx + dy * dy);
+			if (dist < balls[i].radius + balls[j].radius) {
+				ctx.beginPath();
+				ctx.moveTo(balls[i].x, balls[i].y);
+				ctx.lineTo(balls[j].x, balls[j].y);
+				ctx.strokeStyle = 'white';
+				ctx.lineWidth = 5;
+				ctx.stroke();
+			}
+		}
+	}
 }
 
 function loop() {
 	ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
-	ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-
-	for (const ball of balls) {
-		ball.draw();
-		ball.update();
-		ball.collisionDetect();
-		// ball.proximityDetect();
-		// ball.cursorDetect();
-	}
-
+	ctx.fillRect(0, 0, width, height);
+	drawBalls();
+	updateBalls();
+	drawLines();
 	requestAnimationFrame(loop);
 }
 
 function startLoop() {
-	// balls = [];
-	// ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
+	balls = [];
+	createBalls(
+		ammount.value,
+		maxSize.value,
+		minSize.value,
+		maxSpeed.value,
+		minSpeed.value
+	);
 	loop();
 }
 
-function stopLoop() {
-	cancelAnimationFrame(myLoop);
+function resetLoop() {
+	balls = [];
+	createBalls(
+		ammount.value,
+		maxSize.value,
+		minSize.value,
+		maxSpeed.value,
+		minSpeed.value
+	);
 }
